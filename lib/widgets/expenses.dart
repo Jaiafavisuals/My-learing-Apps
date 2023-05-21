@@ -1,3 +1,4 @@
+import 'package:expenses_app/widgets/chart/chart.dart';
 import 'package:expenses_app/widgets/new_expense.dart';
 import 'package:flutter/material.dart';
 import 'package:expenses_app/models/expense.dart';
@@ -86,8 +87,32 @@ class _ExpensesState extends State<Expenses> {
         ],
       ),
       body: Column(
-        children: [const Text('data'), Expanded(child: mainContent)],
+        children: [
+          Chart(expenses: _registeredExpense),
+          Expanded(child: mainContent),
+        ],
       ),
     );
+  }
+}
+
+class ExpenseBucket {
+  const ExpenseBucket({required this.category, required this.expenses});
+
+  final Category category;
+  final List<Expense> expenses;
+
+  ExpenseBucket.forCategory(List<Expense> allExpense, this.category)
+      : expenses = allExpense
+            .where((expense) => expense.category == category)
+            .toList();
+
+  double get totalExpenses {
+    double sum = 0;
+
+    for (final expense in expenses) {
+      sum = sum + expense.amount;
+    }
+    return sum;
   }
 }
